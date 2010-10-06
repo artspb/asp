@@ -6,21 +6,20 @@ int main(/*int argc, char *argv[]*/)
 {
     //QCoreApplication a(argc, argv);
 
-    double * p = new double;
-    double * q = new double;
-    int n;
+    //Создает и определяем переменные.
+    int n = 3;
+    double * factors;
+    mult poly;
 
-    n = 2;
+    //Поставть TODO плагин наконец! ВотЪ.
 
-    for(int i = 1; i <= n; i++)
-    {
-        p[i] = 0,2;
-        q[i] = 0,2;
-    }
+    factors = poly.get(n);
+    if(factors)
+        for(int i = 0; i <=n; i++)
+            qDebug() << factors[i];
 
-    mult poly = mult(p, q, n);
-
-    qDebug() << poly.get()[0];
+    //Удаляем более не нужные указатели.
+    delete factors;
 
     return 0;
 }
