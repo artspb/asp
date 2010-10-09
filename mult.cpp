@@ -1,23 +1,26 @@
 #include "mult.h"
+#include <QDebug>
 
 mult::mult()
 {
     p = 0;
     q = 0;
+    z = 0;
     n = 0;
 }
 
-mult::mult(double * newP, double * newQ, int newN)
+mult::mult(double * p, double * q, int n)
 {
-    p = newP;
-    q = newQ;
-    n = newN;
+    mult::p = p;
+    mult::q = q;
+    mult::n = n;
 }
 
 mult::~mult()
 {
     delete p;
     delete q;
+    delete z;
 }
 
 
@@ -30,10 +33,10 @@ double * mult::get()
 {
     if(p && q && n)
     {
-        double * z = new double[n+1];
+        z = new double[n+1];
 
         //Алгоритм для рассчета коэффициентов при степенях z.
-        //Возвращает значения только для полинома степени n.
+        //Возвращает значения для полинома степени n.
         z[0] = q[1];
         z[1] = p[1];
         for(int i = 2; i <= n; i++)
@@ -52,18 +55,18 @@ double * mult::get()
         return 0;
 }
 
-double * mult::get(double * newP, double * newQ, int newN)
+double * mult::get(double * p, double * q, int n)
 {
-    p = newP;
-    q = newQ;
-    n = newN;
+    mult::p = p;
+    mult::q = q;
+    mult::n = n;
 
     return get();
 }
 
-double * mult::get(int newN)
+double * mult::get(int n)
 {
-    n = newN;
+    mult::n = n;
     p = new double[n+1];
     q = new double[n+1];
 

@@ -6,12 +6,12 @@ int main(/*int argc, char *argv[]*/)
 {
     //QCoreApplication a(argc, argv);
 
-    //Создает и определяем переменные.
+    //Создаем и определяем переменные.
     int n = 3;
     double * factors;
     mult poly;
 
-    //Поставть TODO плагин наконец! ВотЪ.
+    //Поставь TODO плагин наконец! ВотЪ.
 
     factors = poly.get(n);
     if(factors)
