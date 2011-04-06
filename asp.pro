@@ -7,5 +7,11 @@ CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
 SOURCES += main.cpp \
-    mult.cpp
-HEADERS += mult.h
+    terminal.cpp \
+    solve.cpp
+HEADERS += \
+    terminal.h \
+    solve.h
+
+OTHER_FILES += \
+    README
