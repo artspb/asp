@@ -1,5 +1,6 @@
 #include "solve.h"
 #include <math.h> // Очень полезный пакет :)
+#include <QDebug>
 
 int Solve::sign(double value)
 {
@@ -70,42 +71,58 @@ QList<double> Solve::cube(double a, double b, double c, double d)
         return x;
 }
 
-double * Solve::mult(double * p, double * q)
+QList<double> Solve::mult(QList<double> p, QList<double> q)
 {
-    if(p && q)
-    {
-        unsigned int n = (sizeof(p) > sizeof(q)) ? (sizeof(q) - 1) : (sizeof(p) - 1);
-        double * z = new double[n+1];
+    QList<double> z;
+    z.clear();
 
-        //Алгоритм для рассчета коэффициентов при степенях z.
-        //Возвращает значения для полинома степени n.
-        z[0] = q[1];
-        z[1] = p[1];
+    if(!p.isEmpty() && !q.isEmpty())
+    {
+        // Вставляем пустые значение, которые не будут использованы, для простоты реализации алгоритма.
+        p.insert(0, 0);
+        q.insert(0, 0);
+        unsigned int n = (p.size() > q.size()) ? (q.size() - 1) : (p.size() - 1);
+
+        // Алгоритм для рассчета коэффициентов при степенях z.
+        // Возвращает значения для полинома степени n.
+        z.insert(0, q.value(1));
+        z.insert(1, p.value(1));
         for(unsigned int i = 2; i <= n; i++)
         {
-            z[i] = 0;
+            z.insert(i, 0);
             for(unsigned int j = i; j > 0; j--)
             {
-                z[j] = z[j] * q[i] + z[j-1] * p[i];
+                z.replace(j, z.value(j) * q.value(i) + z.value(j-1) * p.value(i));
             }
-            z[0] = z[0] * q[i];
+            z.replace(0, z.value(0) * q.value(i));
         }
-
-        return z;
     }
-    else
-        return 0;
+
+    return z;
 }
 
-double * Solve::mult(int n)
+QList<double> Solve::mult(QList<double> p)
 {
-    double * p = new double[n+1];
-    double * q = new double[n+1];
+    QList<double> q;
+    q.clear();
 
-    for(int i = 1; i <= n; i++)
+    for(int i = 0; i < p.size(); i++)
+        q.append(1.0 - p.value(i));
+
+    return mult(p, q);
+}
+
+QList<double> Solve::mult(int n)
+{
+    QList<double> p;
+    p.clear();
+    QList<double> q;
+    q.clear();
+
+    for(int i = 0; i < n; i++)
     {
-        p[i] = 0.2;
-        q[i] = 0.8;
+        p.append(0.2);
+        q.append(0.8);
     }
 
     return mult(p, q);
