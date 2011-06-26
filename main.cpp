@@ -8,57 +8,41 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QList<double> mu;
-    QList<int> m;
-    QList<double> lambda;
+    Terminal terminal;
 
-    mu.clear();
-    m.clear();
-    lambda.clear();
+    for(int i = 0; i < 25; ++i)
+        terminal.append(0.976, 1.1);
 
-//    for(int i = 0; i < 25; ++i)
-//        m.append(25);
-//    for(int i = 0; i < 15; ++i)
-//        m.append(15);
-//    for(int i = 0; i < 10; ++i)
-//        m.append(10);
+    for(int i = 0; i < 15; ++i)
+        terminal.append(0.828, 0.697);
 
-//    for(int i = 0; i < 25; ++i)
+    for(int i = 0; i < 10; ++i)
+        terminal.append(0.486, 0.0508);
+
+//    for(int i = 0; i < 100; ++i)
 //    {
-//        mu.append(0.976);
-//        lambda.append(1.1);
+//        mu.append(1);
+//        lambda.append(3.5);
 //    }
 
-//    for(int i = 0; i < 15; ++i)
-//    {
-//        mu.append(0.828);
-//        lambda.append(0.697);
-//    }
-
-//    for(int i = 0; i < 10; ++i)
-//    {
-//        mu.append(0.486);
-//        lambda.append(0.0508);
-//    }
-
-    for(int i = 0; i < 100; ++i)
-        m.append(100);
-
-    for(int i = 0; i < 100; ++i)
-    {
-        mu.append(1);
-        lambda.append(3.5);
-    }
-
-    Terminal terminal(mu, m, lambda);
+//    Terminal terminal(mu, lambda);
 
 //    QList<double> Z = terminal.getZ();
 
-//    for(int i = 0; i <= 50; ++i)
+//    for(int i = 0; i <= 100; ++i)
 //        qDebug() << i << Z.value(i);
 
-    qDebug() << terminal.getD(5);
+    terminal.setS(5);
+    qDebug() << terminal.getD();
+    qDebug() << terminal.getTw();
     qDebug() << terminal.getTs(1);
+    qDebug() << terminal.getTs(30);
+    qDebug() << terminal.getTs(45);
+    qDebug() << terminal.getIt();
+
+    double temp;
+    temp = (25 * terminal.getTs(1) + 15 * terminal.getTs(30) + 10 * terminal.getTs(45)) / 50;
+    qDebug() << temp;
 
 //    QListIterator<double> i(Solve::cube(1, -27, 0));
 //    while(i.hasNext())

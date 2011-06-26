@@ -5,31 +5,73 @@
 
 Terminal::Terminal()
 {
-    init();
+    clear();
 }
 
-Terminal::Terminal(QList<double> mu, QList<int> m, QList<double> lambda)
-{
-    init();
-    Terminal::mu = mu;
-    Terminal::m = m;
-    Terminal::lambda = lambda;
-    ms = m.count();
-}
-
-void Terminal::init()
+void Terminal::clear()
 {
     tw = 0;
-    ms = 0;
-    P.clear();
+    s = 0;
+    d = 0;
+    lambdaM = 0;
     mu.clear();
-    m.clear();
     lambda.clear();
+}
+
+void Terminal::append(double mu, double lambda)
+{
+    Terminal::mu.append(mu);
+    Terminal::lambda.append(lambda);
+    solve();
+}
+
+bool Terminal::append(QList<double> mu, QList<double> lambda)
+{
+    if (mu.size() != lambda.size())
+        return false;
+    else
+    {
+        Terminal::mu.append(mu);
+        Terminal::lambda.append(lambda);
+        solve();
+        return true;
+    }
+}
+
+void Terminal::solve()
+{
+    if (s > 0)
+    {
+        lambdaM = 0;
+        for (int i = 0; i < getMs(); ++i)
+            lambdaM = lambdaM + getLambda(i);
+
+        double td = 1; // Содержит предыдущее значение d.
+        d = 0;
+        tw = 0;
+        it = 0;
+
+        // Считаем, пока не достигнем желаемой точности.
+        while(fabs(td - d) > accuracy)
+        {
+            ++it;
+            td = d;
+            d = 0;
+            QList<double> Z = getZ();
+
+            for (int i = s + 1; i <= getMs(); ++i)
+                d = d + (i - s) * Z.value(i);
+
+            // Если будет еще одна итерация.
+            if (fabs(td - d) > accuracy)
+                tw = d * getMs() / getLambdaM();
+        }
+    }
 }
 
 QList<double> Terminal::getZ()
 {
-    // TODO: Вынести в константу, рассчет только после инициализации или сета.
+    // Не держим список Z в переменной, т.к. он меняется при изменении P.
     return Solve::mult(getP());
 }
 
@@ -40,9 +82,10 @@ double Terminal::getP(int i)
 
 QList<double> Terminal::getP()
 {
-    // TODO: Вынести в константу, рассчет только после инициализации или сета.
+    // Не держим P в переменной, т.к. P(i) меняется при изменении tw.
+    QList<double> P;
     P.clear();
-    for(int i = 0; i < ms; ++i)
+    for(int i = 0; i < getMs(); ++i)
         P.append(getP(i));
     return P;
 }
@@ -69,7 +112,7 @@ double Terminal::getLambda(int i)
 
 double Terminal::getM(int i)
 {
-    return m.value(i);
+    return mu.count(mu.value(i));
 }
 
 double Terminal::getMu(int i)
@@ -77,41 +120,33 @@ double Terminal::getMu(int i)
     return mu.value(i);
 }
 
-int Terminal::getS()
+void Terminal::setS(int s)
 {
-    return s;
+    Terminal::s = s;
+    solve();
 }
 
-double Terminal::getD(int s)
+double Terminal::getD()
 {
-    double td = 1;
-    d = 0;
-    while(fabs(td - d) > accuracy)
-    {
-        td = d;
-        d = 0;
-        Z = getZ();
-        for (int i = s + 1; i <= ms; ++i)
-        {
-            d = d + (i - s) * Z.value(i);
-        }
-        tw = d * ms / getLambdaM();
-    }
     return d;
 }
 
 double Terminal::getLambdaM()
 {
-    double lambdaM = 0;
-    for (int i = 0; i < ms; ++i)
-    {
-        lambdaM = lambdaM + getLambda(i);
-    }
     return lambdaM;
 }
 
 double Terminal::getTs(int i)
 {
-    qDebug() << getTw();
     return getT(i) + getTw();
+}
+
+int Terminal::getIt()
+{
+    return it;
+}
+
+int Terminal::getMs()
+{
+    return mu.size();
 }

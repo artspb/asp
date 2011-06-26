@@ -7,43 +7,36 @@ class Terminal
 {
 public:
     Terminal(); // Lego.
-    Terminal(QList<double>, QList<int>, QList<double>); //
-    QList<double> getZ(); //
-    double getD(int); //
-    double getTs(int); //
-    double getT(int); //
+    void clear(); // Обнуляем списки и переменные.
+    void append(double mu, double lambda); // Добавляет судно на маршрут.
+    bool append(QList<double> mu, QList<double> lambda); // Добавляет список судов на маршрут.
+    double getD(); // Среднее число судов в терминале.
+    double getTs(int i); // Среднее время пребывания в терминале i-го судна.
+    double getT(int i); // Время обработки i-го судна.
+    double getTw(); // Среднее время ожидания судов в терминале.
+    int getIt(); // Возвращает количество итераций последнего вызова solve.
+    int getMs(); // Возвращает длину списка mu как количество судов на маршруте.
+    void setS(int s); // Устанавливает количество причалов терминала, после чего пересчитывает показетели качества.
 
 private:
-    void init(); //
-    double getP(int); //
+    void solve(); // Рассчитываем значения d и tw.
+    double getP(int i); //
+    QList<double> getZ(); //
     QList<double> getP(); //
-    double getLambdaS(int); //
-    double getTw(); //
-    double getLambda(int); //
-    double getM(int); //
-    double getMu(int); //
-    int getS(); //
+    double getLambdaS(int i); //
+    double getLambda(int i); //
+    double getM(int i); //
+    double getMu(int i); //
     double getLambdaM(); //
 
     static const double accuracy = 1e-8; // Точность.
-    int ms; // Число судов на маршруте.
-    QList<int> m; // Число судов в каждой группе.
-    int s; // Количество причалов.
-    QList<double> t; // Массив времен обработки судов.
-    double tw; // Среднее время ожидания судна в терминале.
-    QList<double> ts; // Массив суммарных времен пребывания судна в терминале (t + tw).
-    double d; // Среднее число судов на обработке.
-    double ds; // Среднее число судов в терминале.
-    double it; // Число итераций, за которое была достигнута необходимая точность.
-    double phi; //
-    double nu; //
     QList<double> mu; //
     QList<double> lambda; //
-    double psi; //
-    double l; //
-    double ls; //
-    QList<double> P; //
-    QList<double> Z;
+    int s; // Количество причалов.
+    double tw; // Среднее время ожидания судна в терминале.
+    double d; // Среднее число судов на обработке.
+    double it; // Число итераций, за которое была достигнута необходимая точность.
+    double lambdaM; // Сумма всех значений списка lambda.
 };
 
 #endif // TERMINAL_H
